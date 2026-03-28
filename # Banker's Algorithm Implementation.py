@@ -1,0 +1,53 @@
+# Banker's Algorithm Implementation
+
+n = int(input("Enter number of processes: "))
+r = int(input("Enter number of resources: "))
+
+# Allocation Matrix
+allocation = []
+print("Enter Allocation Matrix:")
+for i in range(n):
+    allocation.append(list(map(int, input().split())))
+
+# Maximum Matrix
+maximum = []
+print("Enter Maximum Matrix:")
+for i in range(n):
+    maximum.append(list(map(int, input().split())))
+
+# Available Resources
+available = list(map(int, input("Enter Available Resources: ").split()))
+
+# Need Matrix
+need = []
+for i in range(n):
+    need.append([maximum[i][j] - allocation[i][j] for j in range(r)])
+
+print("\nNeed Matrix:")
+for row in need:
+    print(row)
+
+# Safety Algorithm
+finish = [0] * n
+safe_sequence = []
+work = available.copy()
+
+while len(safe_sequence) < n:
+    found = False
+    for i in range(n):
+        if finish[i] == 0:
+            if all(need[i][j] <= work[j] for j in range(r)):
+                for j in range(r):
+                    work[j] += allocation[i][j]
+                safe_sequence.append(i)
+                finish[i] = 1
+                found = True
+    if not found:
+        break
+
+# Output
+if len(safe_sequence) == n:
+    print("\nSystem is in SAFE state")
+    print("Safe Sequence:", safe_sequence)
+else:
+    print("\nSystem is in UNSAFE state")
